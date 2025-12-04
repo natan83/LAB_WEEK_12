@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,8 +55,19 @@ class MainActivity : AppCompatActivity() {
                 launch {
                     // collect the list of movies from the StateFlow
                     movieViewModel.popularMovies.collect { movies ->
-                        // add the list of movies to the adapter
-                        movieAdapter.addMovies(movies)
+                        // Get current year
+                        val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
+
+                        // Filter movies by current year and sort by popularity descending
+                        val filteredMovies = movies
+                            .filter { movie ->
+                                // Filter only movies released in current year (2025)
+                                movie.releaseDate?.startsWith(currentYear) == true
+                            }
+                            .sortedByDescending { it.popularity }
+
+                        // add the filtered and sorted list to the adapter
+                        movieAdapter.addMovies(filteredMovies)
                     }
                 }
                 launch {

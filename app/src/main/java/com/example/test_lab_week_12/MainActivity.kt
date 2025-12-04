@@ -4,15 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.test_lab_week_12.model.Movie
 
 class MainActivity : AppCompatActivity() {
-    private val movieAdapter by lazy {
-        MovieAdapter(object : MovieAdapter.MovieClickListener {
-            override fun onMovieClick(movie: Movie) {
-                openMovieDetails(movie)
-            }
-        })
+
+    private val movieAdapter = MovieAdapter { movie ->
+        val intent = Intent(this, MovieDetailActivity::class.java).apply {
+            putExtra("MOVIE_ID", movie.id)
+            putExtra("MOVIE_TITLE", movie.title)
+            putExtra("MOVIE_OVERVIEW", movie.overview)
+            putExtra("MOVIE_POSTER", movie.posterPath)
+            putExtra("MOVIE_BACKDROP", movie.backdropPath)
+            putExtra("MOVIE_RELEASE_DATE", movie.releaseDate)
+            putExtra("MOVIE_RATING", movie.voteAverage)
+        }
+        startActivity(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,15 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         val recyclerView: RecyclerView = findViewById(R.id.movie_list)
         recyclerView.adapter = movieAdapter
-    }
 
-    private fun openMovieDetails(movie: Movie) {
-        val intent = Intent(this, DetailsActivity::class.java).apply {
-            putExtra(DetailsActivity.EXTRA_TITLE, movie.title)
-            putExtra(DetailsActivity.EXTRA_RELEASE, movie.releaseDate)
-            putExtra(DetailsActivity.EXTRA_OVERVIEW, movie.overview)
-            putExtra(DetailsActivity.EXTRA_POSTER, movie.posterPath)
-        }
-        startActivity(intent)
+        // Implementation will continue in Commit 2
     }
 }

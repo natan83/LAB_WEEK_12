@@ -7,53 +7,47 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.test_lab_week_12.model.Movie
 
-class MovieAdapter(private val clickListener: MovieClickListener) :
+class MovieAdapter(private val onMovieClick: (Movie) -> Unit) :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     private val movies = mutableListOf<Movie>()
 
+    fun addMovies(newMovies: List<Movie>) {
+        movies.clear()
+        movies.addAll(newMovies)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.view_movie_item, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_movie, parent, false)
         return MovieViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        holder.bind(movies[position])
     }
 
     override fun getItemCount() = movies.size
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = movies[position]
-        holder.bind(movie)
-        holder.itemView.setOnClickListener { clickListener.onMovieClick(movie) }
-    }
-
-    fun addMovies(movieList: List<Movie>) {
-        movies.addAll(movieList)
-        notifyItemRangeInserted(0, movieList.size)
-    }
-
-    class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val imageUrl = "https://image.tmdb.org/t/p/w185/"
-        private val titleText: TextView by lazy {
-            itemView.findViewById(R.id.movie_title)
-        }
-        private val poster: ImageView by lazy {
-            itemView.findViewById(R.id.movie_poster)
-        }
+    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val posterImageView: ImageView = itemView.findViewById(R.id.movie_poster)
+        private val titleTextView: TextView = itemView.findViewById(R.id.movie_title)
+        private val releaseDateTextView: TextView = itemView.findViewById(R.id.movie_release_date)
 
         fun bind(movie: Movie) {
-            titleText.text = movie.title
+            titleTextView.text = movie.title
+            releaseDateTextView.text = movie.releaseDate
 
+            val posterUrl = "https://image.tmdb.org/t/p/w500${movie.posterPath}"
             Glide.with(itemView.context)
-                .load("$imageUrl${movie.posterPath}")
-                .placeholder(R.mipmap.ic_launcher)
-                .fitCenter()
-                .into(poster)
-        }
-    }
+                .load(posterUrl)
+                .into(posterImageView)
 
-    interface MovieClickListener {
-        fun onMovieClick(movie: Movie)
+            itemView.setOnClickListener {
+                onMovieClick(movie)
+            }
+        }
     }
 }

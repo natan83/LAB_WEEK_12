@@ -1,4 +1,4 @@
-package com.example.movieapp
+package com.example.lab_week_12
 
 import com.squareup.moshi.Json
 

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.movieapp"
+    namespace = "com.example.lab_week_12"
     compileSdk = 34
 
     defaultConfig {

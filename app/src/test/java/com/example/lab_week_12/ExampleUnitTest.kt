@@ -1,7 +1,6 @@
 package com.example.lab_week_12
 
 import org.junit.Test
-
 import org.junit.Assert.*
 
 /**

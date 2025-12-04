@@ -30,8 +30,8 @@ class DetailsActivity : AppCompatActivity() {
         titleText.text = extras?.getString(EXTRA_TITLE).orEmpty()
         releaseText.text = extras?.getString(EXTRA_RELEASE).orEmpty().take(4)
 
-        overviewText.text =
-            getString(R.string.movie_overview, extras?.getString(EXTRA_OVERVIEW).orEmpty())
+        // Fix: Langsung set text tanpa getString
+        overviewText.text = extras?.getString(EXTRA_OVERVIEW).orEmpty()
 
         val posterPath = extras?.getString(EXTRA_POSTER).orEmpty()
         Glide.with(this@DetailsActivity)
@@ -39,6 +39,5 @@ class DetailsActivity : AppCompatActivity() {
             .placeholder(R.mipmap.ic_launcher)
             .fitCenter()
             .into(poster)
-
     }
 }
